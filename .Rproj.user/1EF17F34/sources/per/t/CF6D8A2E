@@ -1,0 +1,25 @@
+{
+    "id": "CF6D8A2E",
+    "path": null,
+    "project_path": null,
+    "type": "r_code_browser",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1758204622968.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "context": ".GlobalEnv:::compare_interval_censored_pair"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1743674858,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1758204622968,
+    "read_only": false,
+    "read_only_alternatives": []
+}

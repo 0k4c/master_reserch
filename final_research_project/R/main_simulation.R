@@ -708,6 +708,17 @@ run_final_study <- function() {
   # 結果分析
   analysis <- analyze_final_results(test_results)
 
+  # 結果をCSVファイルに出力
+  cat("\n=== 結果をCSVファイルに出力しています ===\n")
+  # resultsディレクトリがなければ作成
+  if (!dir.exists("results")) {
+    dir.create("results")
+  }
+  write.csv(test_results, "results/simulation_results.csv", row.names = FALSE)
+  write.csv(analysis$power_summary, "results/power_summary.csv", row.names = FALSE)
+  write.csv(analysis$type1_summary, "results/type1_error_summary.csv", row.names = FALSE)
+  cat("結果は 'results' フォルダに保存されました。\n")
+
   return(list(
     simulation_results = test_results,
     analysis = analysis
