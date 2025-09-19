@@ -98,7 +98,7 @@ analysis <- analyze_final_results(full_results)
 | **GPC** | Direct | なし | Net Benefit, Win Ratio |
 | **GPC** | Midpoint | 区間中点 | Net Benefit, Win Ratio |
 | **GPC** | Rightpoint | 区間右端点 | Net Benefit, Win Ratio |
-| **GPC** | Enhanced EMI | Beta分布代入 | Net Benefit, Win Ratio |
+| **GPC** | Enhanced EMI | 均等間隔代入（論文手法） | Net Benefit, Win Ratio |
 | **従来法** | RMST | 中点代入 | 平均差 |
 | **従来法** | ログランク | 中点代入 | カイ二乗統計量 |
 

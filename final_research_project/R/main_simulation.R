@@ -190,38 +190,11 @@ gpc_with_imputation_improved <- function(data_control, data_treatment,
     surv_control <- rightpoint_assignment(data_control)
     surv_treatment <- rightpoint_assignment(data_treatment)
   } else if (imputation_method == "enhanced_emi") {
-    # 拡張EMI（複数代入の平均）
-    emi_control <- enhanced_emi_imputation(data_control, n_imputations = 5)
-    emi_treatment <- enhanced_emi_imputation(data_treatment, n_imputations = 5)
-
-    # 複数代入結果の統合
-    gpc_results <- list()
-    for (m in 1:5) {
-      gpc_m <- gpc_survival_improved(emi_control[[m]], emi_treatment[[m]], gpc_method)
-      gpc_results[[m]] <- gpc_m
-    }
-
-    # Rubin's rulesで統合
-    estimates <- sapply(gpc_results, function(x) x$estimate)
-    p_values <- sapply(gpc_results, function(x) x$p_value)
-
-    pooled_estimate <- mean(estimates)
-    # Fisher's method for p-values
-    if (all(p_values > 0)) {
-      chi_sq <- -2 * sum(log(p_values))
-      pooled_p <- 1 - pchisq(chi_sq, df = 2 * 5)
-    } else {
-      pooled_p <- 0
-    }
-
-    return(list(
-      method = paste0("EnhancedEMI_", gpc_method),
-      estimate = pooled_estimate,
-      p_value = pooled_p
-    ))
+    surv_control <- enhanced_emi_imputation(data_control)
+    surv_treatment <- enhanced_emi_imputation(data_treatment)
   }
 
-  # 単一代入の場合
+  # GPCを適用して結果を返す
   return(gpc_survival_improved(surv_control, surv_treatment, gpc_method))
 }
 

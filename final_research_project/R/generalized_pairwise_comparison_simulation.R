@@ -119,62 +119,54 @@ gpc_interval_censored <- function(data_control, data_treatment, method = "net_be
 # ===============================================================================
 
 # 区間打ち切りデータに対する拡張EMI法
-enhanced_emi_imputation <- function(interval_data, n_imputations = 10, method = "adaptive") {
-  n <- nrow(interval_data)
-  imputed_datasets <- list()
+enhanced_emi_imputation <- function(interval_data) {
+  # 結果を格納するデータフレーム
+  imputed_df <- data.frame(time = numeric(nrow(interval_data)),
+                           status = numeric(nrow(interval_data)))
 
-  for (m in 1:n_imputations) {
-    imputed_times <- numeric(n)
+  # ユニークな区間を特定
+  unique_intervals <- unique(interval_data[interval_data[, 1] < interval_data[, 2] & !is.infinite(interval_data[, 2]), ])
 
-    for (i in 1:n) {
-      left <- interval_data[i, 1]
-      right <- interval_data[i, 2]
+  # 各ユニーク区間に対して処理
+  if (nrow(unique_intervals) > 0) {
+    for (i in 1:nrow(unique_intervals)) {
+      L <- unique_intervals[i, 1]
+      R <- unique_intervals[i, 2]
 
-      if (left == right) {
-        # 正確な観測時刻
-        imputed_times[i] <- left
-      } else if (is.infinite(right)) {
-        # 右側打ち切り - 指数分布で補外
-        if (method == "adaptive") {
-          # 観測されたイベント時刻から生存関数を推定
-          observed_events <- interval_data[interval_data[,1] == interval_data[,2] &
-                                         interval_data[,1] <= 1, 1]
-          if (length(observed_events) > 0) {
-            lambda_est <- 1 / mean(observed_events)
-          } else {
-            lambda_est <- 1  # デフォルト値
-          }
-          imputed_times[i] <- left + rexp(1, rate = lambda_est)
-        } else {
-          # 従来の一様分布代入
-          imputed_times[i] <- left + rexp(1, rate = 1)
-        }
-      } else {
-        # 区間打ち切り
-        if (method == "adaptive") {
-          # Beta分布を使用した適応的代入
-          # 区間の位置に基づいてBeta分布のパラメータを調整
-          interval_width <- right - left
-          alpha <- 2 + 1/interval_width  # 幅が狭いほど山が鋭くなる
-          beta <- 2 + 1/interval_width
+      # この区間に該当する行のインデックスを取得
+      indices <- which(interval_data[, 1] == L & interval_data[, 2] == R)
+      n_j <- length(indices)
 
-          uniform_sample <- rbeta(1, alpha, beta)
-          imputed_times[i] <- left + uniform_sample * (right - left)
-        } else {
-          # 従来の一様分布代入
-          imputed_times[i] <- runif(1, left, right)
-        }
+      if (n_j > 0) {
+        # 均等に割り付けた値を計算
+        s_j <- 1:n_j
+        imputed_times <- L + (R - L) * (s_j / (n_j + 1))
+        
+        # 該当する行に代入
+        imputed_df$time[indices] <- imputed_times
+        imputed_df$status[indices] <- 1 # イベントあり
       }
     }
-
-    # 打ち切り指示子の設定
-    delta <- ifelse(imputed_times <= 1 & !is.infinite(interval_data[, 2]), 1, 0)
-    imputed_times[imputed_times > 1] <- 1
-
-    imputed_datasets[[m]] <- data.frame(time = imputed_times, status = delta)
   }
 
-  return(imputed_datasets)
+  # 正確な観測データ (L == R)
+  exact_indices <- which(interval_data[, 1] == interval_data[, 2])
+  if (length(exact_indices) > 0) {
+    imputed_df$time[exact_indices] <- interval_data[exact_indices, 1]
+    imputed_df$status[exact_indices] <- 1 # イベントあり
+  }
+
+  # 右側打ち切りデータ (R == Inf)
+  right_censored_indices <- which(is.infinite(interval_data[, 2]))
+  if (length(right_censored_indices) > 0) {
+    imputed_df$time[right_censored_indices] <- interval_data[right_censored_indices, 1]
+    imputed_df$status[right_censored_indices] <- 0 # 打ち切り
+  }
+  
+  # statusをcensにリネーム（他関数との整合性のため）
+  names(imputed_df)[names(imputed_df) == 'status'] <- 'cens'
+
+  return(imputed_df)
 }
 
 # 複数代入データセットからの統合結果の計算
