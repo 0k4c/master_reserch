@@ -29,6 +29,8 @@ library(progress)
 source("flexible_data_generation.R")
 source("improved_gpc_with_packages.R")
 source("final_imputation_comparison_study.R")
+source("generalized_pairwise_comparison_simulation.R")
+
 
 
 # ===============================================================================
