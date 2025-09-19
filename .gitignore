@@ -1,0 +1,17 @@
+# History files
+.Rhistory
+.RData
+
+# RStudio specific
+.Rproj.user/
+
+# Compiled documents
+*.pdf
+*.zip
+*.tex
+
+# Output folder
+results/
+
+# RStudio project file
+*.Rproj
