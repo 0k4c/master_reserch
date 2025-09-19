@@ -1,6 +1,6 @@
 # 一般化ペアワイズ比較における代入法の比較研究
 
-## 🎯 研究概要
+##  研究概要
 
 本研究は、区間打ち切りデータに対する一般化ペアワイズ比較（Generalized Pairwise Comparison, GPC）において、**どの代入法が最も優れているか**を明らかにする統計的比較研究です。
 
@@ -16,7 +16,7 @@
    - RMST（Restricted Mean Survival Time）
    - ログランク検定
 
-## 🚀 主要な成果
+##  主要な成果
 
 ✅ **p値計算問題の完全解決**: すべての統計手法で適切なp値（0-1範囲）を計算
 ✅ **理論的統計手法の実装**: 正しい帰無仮説・対立仮説に基づく検定
@@ -24,23 +24,23 @@
 ✅ **包括的シミュレーション**: 24種類の生存分布での検証
 ✅ **論文品質の実装**: 再現可能で信頼性の高いコード
 
-## 📁 ファイル構成
+##  ファイル構成
 
-### 🔴 **メインファイル**（必須）
+###  **メインファイル**（必須）
 ```
 final_imputation_comparison_study.R    # メイン研究コード
 final_verification_test.R              # 動作確認テスト
 flexible_data_generation.R             # データ生成（制限緩和版）
 ```
 
-### 🔵 **サポートファイル**
+###  **サポートファイル**
 ```
 interval_censord_data_function.R       # 元の代入法関数
 distributions_2arm.R                   # 24種類の生存分布
 improved_gpc_with_packages.R           # WINSとBuyseTest活用版
 ```
 
-### 📊 **出力ファイル**（実行後自動生成）
+###  **出力ファイル**（実行後自動生成）
 ```
 results/
 ├── simulation_results.csv             # 全シミュレーション結果
@@ -48,7 +48,7 @@ results/
 └── type1_error_summary.csv            # 第1種誤り分析結果
 ```
 
-## ⚡ クイックスタート
+##  クイックスタート
 
 ### 1. 動作確認（必須）
 ```r
@@ -89,7 +89,7 @@ analysis <- analyze_final_results(full_results)
 - `use_parallel`: 並列処理を行うかどうか。（デフォルト: `TRUE`）
 - `show_progress`: 実行中にプログレスバーを表示するかどうか。（デフォルト: `TRUE`）
 
-## 📊 研究手法詳細
+##  研究手法詳細
 
 ### 統計手法（8手法を同時比較）
 
@@ -109,7 +109,7 @@ analysis <- analyze_final_results(full_results)
 - **計算効率**: 実行時間とメモリ使用量
 - **頑健性**: 様々な条件下での安定性
 
-## 🎓 理論的背景
+##  理論的背景
 
 ### 生存時間解釈
 - **前提**: 生存時間が長い = 良い結果
@@ -126,7 +126,7 @@ analysis <- analyze_final_results(full_results)
 - **H1**: Net Benefit ≠ 0, Win Ratio ≠ 1（差がある）
 - **検定**: 両側検定、正規近似によるp値計算
 
-## 📈 期待される研究成果
+##  期待される研究成果
 
 ### 学術的貢献
 1. **区間打ち切りデータ用GPC手法の確立**
@@ -139,7 +139,7 @@ analysis <- analyze_final_results(full_results)
 2. **信頼性工学**: 製品寿命分析、故障時間分析
 3. **統計ソフトウェア**: R パッケージ開発への応用
 
-## 🔧 技術仕様
+##  技術仕様
 
 ### 必要な環境
 - **R version**: 4.0以上
@@ -155,7 +155,7 @@ analysis <- analyze_final_results(full_results)
   - 小規模研究: 10-15分
   - フル研究: 2-6時間
 
-## 📋 トラブルシューティング
+##  トラブルシューティング
 
 ### よくある問題と解決法
 
@@ -185,18 +185,18 @@ run_final_simulation(
 - **研究相談**: 統計手法に関する質問
 - **コード貢献**: プルリクエスト歓迎
 
-## 📚 参考文献
+##  参考文献
 
 1. Buyse, M. (2010). Generalized pairwise comparisons of prioritized outcomes. *Statistics in Medicine*, 29(30), 3245-3257.
 2. Peron, J. et al. (2018). The net chance of a longer survival as a patient-oriented measure of treatment benefit. *Statistics in Medicine*, 37(16), 2343-2365.
 3. Sun, J. (2006). *The Statistical Analysis of Interval-censored Failure Time Data*. Springer.
 4. Rubin, D.B. (1987). *Multiple Imputation for Nonresponse in Surveys*. Wiley.
 
-## 📄 ライセンス
+##  ライセンス
 
 本研究コードは学術利用を目的として作成されています。商用利用には制限がある場合があります。
 
-## 👥 貢献者
+##  貢献者
 
 - **主研究者**: [研究者名]
 - **指導教員**: [指導教員名]
@@ -207,7 +207,7 @@ run_final_simulation(
 
 **Last Updated**: 2025-01-16
 **Version**: 2.0.0
-**Status**: ✅ Production Ready
+**Status**:  Production Ready
 
 ---
 
