@@ -25,9 +25,11 @@ library(foreach)
 library(doSNOW)
 library(progress)
 
-# データ生成と改良版GPC関数の読み込み
+# すべての依存スクリプトを読み込む
 source("flexible_data_generation.R")
 source("improved_gpc_with_packages.R")
+source("final_imputation_comparison_study.R")
+
 
 # ===============================================================================
 # 1. 研究デザインの明確化
@@ -509,6 +511,8 @@ run_final_simulation <- function(
     } else {
       # 逐次処理版
       sim_results_list <- list()
+      # 逐次処理でも必要なファイルを読み込む
+      source("improved_gpc_with_packages.R")
       for (sim in 1:n_sim) {
         tryCatch({
           # データ生成
