@@ -30,6 +30,7 @@ source("flexible_data_generation.R")
 source("improved_gpc_with_packages.R")
 source("final_imputation_comparison_study.R")
 source("generalized_pairwise_comparison_simulation.R")
+source("effect_size_mapping.R")
 
 
 
@@ -567,7 +568,16 @@ run_final_simulation <- function(
     cat("\n並列処理クラスターを終了しました\n")
   }
 
-  return(results)
+  # 効果サイズ情報を結果に追加
+  cat("\n効果サイズ情報を結果に追加中...\n")
+  results_with_effect_info <- add_effect_size_info_to_results(results)
+
+  # 効果サイズ情報の表示
+  cat("\n=== 使用された効果サイズの情報 ===\n")
+  unique_effects <- sort(unique(results$effect))
+  display_effect_size_info(unique_effects)
+
+  return(results_with_effect_info)
 }
 
 # ===============================================================================
@@ -575,11 +585,20 @@ run_final_simulation <- function(
 # ===============================================================================
 
 analyze_final_results <- function(results) {
+  cat("=== 結果分析中 ===\n")
+
+  # 効果サイズ情報が含まれているかチェック
+  has_effect_info <- "group_setting" %in% names(results)
+  if (has_effect_info) {
+    cat("効果サイズ詳細情報が利用可能です\n")
+  }
+
   # 検出力の計算
-  power_summary <- results %>%
-    group_by(n, K, dropout, effect) %>%
-    summarise(
-      # GPC各手法の検出力
+  if (has_effect_info) {
+    power_summary <- results %>%
+      group_by(n, K, dropout, effect, group_setting, effect_magnitude) %>%
+      summarise(
+        # GPC各手法の検出力
       GPC_Direct_NB = mean(gpc_direct_nb_reject, na.rm = TRUE),
       GPC_Direct_WR = mean(gpc_direct_wr_reject, na.rm = TRUE),
       GPC_Midpoint_NB = mean(gpc_mid_nb_reject, na.rm = TRUE),
@@ -595,6 +614,27 @@ analyze_final_results <- function(results) {
 
       .groups = "drop"
     )
+  } else {
+    power_summary <- results %>%
+      group_by(n, K, dropout, effect) %>%
+      summarise(
+        # GPC各手法の検出力
+        GPC_Direct_NB = mean(gpc_direct_nb_reject, na.rm = TRUE),
+        GPC_Direct_WR = mean(gpc_direct_wr_reject, na.rm = TRUE),
+        GPC_Midpoint_NB = mean(gpc_mid_nb_reject, na.rm = TRUE),
+        GPC_Midpoint_WR = mean(gpc_mid_wr_reject, na.rm = TRUE),
+        GPC_Rightpoint_NB = mean(gpc_right_nb_reject, na.rm = TRUE),
+        GPC_Rightpoint_WR = mean(gpc_right_wr_reject, na.rm = TRUE),
+        GPC_EnhancedEMI_NB = mean(gpc_emi_nb_reject, na.rm = TRUE),
+        GPC_EnhancedEMI_WR = mean(gpc_emi_wr_reject, na.rm = TRUE),
+
+        # 従来手法の検出力
+        RMST_Midpoint = mean(rmst_mid_reject, na.rm = TRUE),
+        LogRank_Midpoint = mean(lr_mid_reject, na.rm = TRUE),
+
+        .groups = "drop"
+      )
+  }
 
   # 第1種の誤りの計算
   type1_summary <- results %>%
